@@ -3,9 +3,11 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    expert.url = "git+https://github.com/expert-lsp/expert.git";
+    expert.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { nixpkgs, ... }:
+  outputs = { nixpkgs, expert, ... }:
     let
       systems = [
         "x86_64-linux"
@@ -26,7 +28,7 @@
             packages = [
               pkgs.beamMinimal28Packages.elixir_1_19
               pkgs.beamMinimal28Packages.erlang
-              pkgs.elixir-ls
+              expert.packages.${system}.default
               pkgs.jq
             ]
             ++ pkgs.lib.optionals pkgs.stdenv.isLinux [
